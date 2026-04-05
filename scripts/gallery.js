@@ -30,12 +30,12 @@ const processImages = async () => {
 
           if (p.includes(".webp"))
             array.push({
-              src: `https://foto2025.diecezko.cz/foto/${author}/${p}`,
-              original: `https://foto2025.diecezko.cz/foto/${author}/${p}`,
+              src: `https://foto2026.diecezko.cz/foto/${author}/${p}`,
+              original: `https://foto2026.diecezko.cz/foto/${author}/${p}`,
               width: width,
               height: height,
-              alt: "Fotka z jarního Diecézka 2025",
-              caption: "Fotka z jarního Diecézka 2025",
+              alt: "Fotka z jarního Diecézka 2026",
+              caption: "Fotka z jarního Diecézka 2026",
             });
         } catch (err) {
           console.error(`Error processing image ${p}:`, err);
