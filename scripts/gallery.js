@@ -1,11 +1,8 @@
 const fs = require("fs");
 const sharp = require("sharp");
 
-// const image_path_gorun = "../foto/gorun";
-// const image_path_urban = "../foto/urban";
-
-const author = "urban";
-const image_path_urban = `../foto/${author}`;
+const author = "gorun";
+const image_path = `../foto/${author}`;
 
 console.log(
   "Prepare JSON format for https://www.npmjs.com/package/react-photo-gallery-next"
@@ -15,7 +12,7 @@ const processImages = async () => {
   let array = [];
 
   try {
-    const photos = fs.readdirSync(image_path_urban);
+    const photos = fs.readdirSync(image_path);
 
     // Process images sequentially
     await Promise.all(
@@ -23,19 +20,19 @@ const processImages = async () => {
         let width, height;
 
         try {
-          const info = await sharp(`${image_path_urban}/${p}`).metadata();
+          const info = await sharp(`${image_path}/${p}`).metadata();
 
           width = info.width > info.height ? 4 : 3;
           height = info.width > info.height ? 3 : 4;
 
           if (p.includes(".webp"))
             array.push({
-              src: `https://foto2025.diecezko.cz/foto/${author}/${p}`,
-              original: `https://foto2025.diecezko.cz/foto/${author}/${p}`,
+              src: `https://foto2026.diecezko.cz/foto/${author}/${p}`,
+              original: `https://foto2026.diecezko.cz/foto/${author}/${p}`,
               width: width,
               height: height,
-              alt: "Fotka z jarního Diecézka 2025",
-              caption: "Fotka z jarního Diecézka 2025",
+              alt: "Fotka z jarního Diecézka 2026",
+              caption: "Fotka z jarního Diecézka 2026",
             });
         } catch (err) {
           console.error(`Error processing image ${p}:`, err);
@@ -44,7 +41,7 @@ const processImages = async () => {
     );
 
     // Write array into the file
-    const file = fs.createWriteStream(`${image_path_urban}/images.json`);
+    const file = fs.createWriteStream(`${image_path}/images.json`);
     file.write(JSON.stringify(array));
     file.end();
 
