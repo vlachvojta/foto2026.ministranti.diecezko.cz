@@ -1,49 +1,50 @@
 const fs = require("fs");
+const path = require("path");
 const sharp = require("sharp");
 
 const author = "gorun";
-const image_path = `../foto/${author}`;
+const imagePath = path.resolve(__dirname, `../foto/${author}`);
+const versionCollator = new Intl.Collator("en", {
+  numeric: true,
+  sensitivity: "base",
+});
 
 console.log(
   "Prepare JSON format for https://www.npmjs.com/package/react-photo-gallery-next"
 );
 
 const processImages = async () => {
-  let array = [];
-
   try {
-    const photos = fs.readdirSync(image_path);
+    const photos = fs
+      .readdirSync(imagePath)
+      .filter((photo) => photo.toLowerCase().endsWith(".webp"))
+      .sort((a, b) => versionCollator.compare(a, b));
 
-    // Process images sequentially
-    await Promise.all(
-      photos.map(async (p) => {
-        let width, height;
+    const array = (
+      await Promise.all(
+        photos.map(async (p) => {
+          try {
+            const info = await sharp(path.join(imagePath, p)).metadata();
+            const isLandscape = info.width > info.height;
 
-        try {
-          const info = await sharp(`${image_path}/${p}`).metadata();
-
-          width = info.width > info.height ? 4 : 3;
-          height = info.width > info.height ? 3 : 4;
-
-          if (p.includes(".webp"))
-            array.push({
+            return {
               src: `https://foto2026.diecezko.cz/foto/${author}/${p}`,
               original: `https://foto2026.diecezko.cz/foto/${author}/${p}`,
-              width: width,
-              height: height,
+              width: isLandscape ? 4 : 3,
+              height: isLandscape ? 3 : 4,
               alt: "Fotka z jarního Diecézka 2026",
               caption: "Fotka z jarního Diecézka 2026",
-            });
-        } catch (err) {
-          console.error(`Error processing image ${p}:`, err);
-        }
-      })
-    );
+            };
+          } catch (err) {
+            console.error(`Error processing image ${p}:`, err);
+            return null;
+          }
+        })
+      )
+    ).filter(Boolean);
 
     // Write array into the file
-    const file = fs.createWriteStream(`${image_path}/images.json`);
-    file.write(JSON.stringify(array));
-    file.end();
+    fs.writeFileSync(path.join(imagePath, "images.json"), JSON.stringify(array));
 
     console.log("Processing completed successfully.");
   } catch (err) {
