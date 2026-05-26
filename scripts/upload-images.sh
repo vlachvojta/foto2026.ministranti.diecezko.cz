@@ -1,16 +1,27 @@
 #!/bin/bash
 
-yarn
-
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
+# if less than 2 arguments are provided, exit
+if [ "$#" -lt 2 ]; then
+   echo "Usage: $0 <source_folder> <destination_folder>"
+   exit 1
+fi
 
-# # Source and destination folders
-source_folder="../tmp/gorun"
-destination_folder="../foto/gorun"
+# Assign command line arguments to variables, with default values if not provided
+source_folder=${1:-"../tmp/vonka"}
+destination_folder=${2:-"../foto/vonka"}
+
+# if package.json does not exist in current directory, exit
+if [ ! -f "package.json" ]; then
+   echo -e "${RED}package.json not found in current directory. Please run this script from scripts/ folder.${NC}"
+   exit 1
+fi
+
+yarn
 
 # Check if source folder exists
 if [ ! -d "$source_folder" ]; then
@@ -46,17 +57,17 @@ for file in "$source_folder"/*; do
       echo -e "${GREEN}Copied: $file_name${NC}"
 
       # Generate files
-      rm ${destination_folder}/images.json
+      rm -f "${destination_folder}/images.json"
       yarn gallery
       yarn img2webp "$destination_folder/$file_name"
 
       rm "$destination_folder/$file_name"
 
       # Commit changes
-      git add ../foto/*
-      git commit -m "Add image $file"
-      git pull
-      git push
+      # git add ../foto/*
+      # git commit -m "Add image $file"
+      # git pull
+      # git push
 
       echo -e "${YELLOW}Image has been commited${NC}"
       echo ""
