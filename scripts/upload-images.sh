@@ -58,20 +58,15 @@ for file in "$source_folder"/*; do
 
       # Generate files
       rm -f "${destination_folder}/images.json"
-      yarn gallery
       yarn img2webp "$destination_folder/$file_name"
 
       rm "$destination_folder/$file_name"
-
-      # Commit changes
-      # git add ../foto/*
-      # git commit -m "Add image $file"
-      # git pull
-      # git push
 
       echo -e "${YELLOW}Image has been commited${NC}"
       echo ""
    fi
 done
+
+yarn gallery
 
 echo "Copy process completed."
