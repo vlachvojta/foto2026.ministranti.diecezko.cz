@@ -2,7 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 
-const author = "gorun";
+// Change this with each new year or event
+const author = "vonka";
+const root_url = `https://foto2026.ministranti.diecezko.cz`;
+
+
 const imagePath = path.resolve(__dirname, `../foto/${author}`);
 const versionCollator = new Intl.Collator("en", {
   numeric: true,
@@ -28,8 +32,8 @@ const processImages = async () => {
             const isLandscape = info.width > info.height;
 
             return {
-              src: `https://foto2026.diecezko.cz/foto/${author}/${p}`,
-              original: `https://foto2026.diecezko.cz/foto/${author}/${p}`,
+              src: `${root_url}/foto/${author}/${p}`,
+              original: `${root_url}/foto/${author}/${p}`,
               width: isLandscape ? 4 : 3,
               height: isLandscape ? 3 : 4,
               alt: "Fotka z jarního Diecézka 2026",
